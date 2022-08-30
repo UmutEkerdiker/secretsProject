@@ -1,6 +1,9 @@
 # Secrets Project
 A web application that allows users to submit secrets anonymously.
 
+I've used EJS for partials, templates and simple loops to display information.
+Besides, app logic was created using express, nodejs and javascript and stored with MongoDB using mongoose.
+
 I've implemented many encryption methods along the development including:
 Facebook and Google authentications, bcrypt, hashing and salting to learn more about authentication and security.
 
