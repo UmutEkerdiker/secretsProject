@@ -1,4 +1,6 @@
 //jshint esversion:6
+
+//require packages
 require("dotenv").config();
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -13,27 +15,34 @@ const FacebookStrategy = require("passport-facebook").Strategy;
 
 const app = express();
 
+//set view engine, public static files and bodyparser
 app.use(express.static("public"));
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({
   extended: true
 }));
 
+
+//start the session
 app.use(session({
   secret: "Our little secret.",
   resave: false,
   saveUninitialized: false
 }));
 
+
+//initialize passport package and session using passport
 app.use(passport.initialize());
 app.use(passport.session());
 
+//mongoose start
 main().catch(err => console.log(err));
 
 async function main() {
   await mongoose.connect('mongodb://localhost:27017/userDB');
 };
 
+//create user schema and include Google and Facebook ID's.
 const userSchema = new mongoose.Schema({
   email: String,
   password: String,
@@ -42,6 +51,7 @@ const userSchema = new mongoose.Schema({
   secret: String
 });
 
+//add plugins for passport and findOrCreate
 userSchema.plugin(passportLocalMongoose);
 userSchema.plugin(findOrCreate);
 
@@ -49,6 +59,7 @@ const User = mongoose.model("User", userSchema);
 
 passport.use(User.createStrategy());
 
+//serialize and deserialize users. (Done according to passport.js documentation)
 passport.serializeUser(function(user, done) {
   done(null, user.id);
 });
@@ -59,6 +70,7 @@ passport.deserializeUser(function(id, done) {
   });
 });
 
+//use GoogleStrategy to save and authenticate users.
 passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
@@ -74,6 +86,7 @@ passport.use(new GoogleStrategy({
   }
 ));
 
+//use FacebookStrategy to save and authenticate users.
 passport.use(new FacebookStrategy({
     clientID: process.env.FACEBOOK_APP_ID,
     clientSecret: process.env.FACEBOOK_APP_SECRET,
@@ -89,10 +102,13 @@ passport.use(new FacebookStrategy({
   }
 ));
 
+
 app.get("/", function(req, res) {
   res.render("home");
 });
 
+
+//create Google routes according to documentation
 app.get("/auth/google",
   passport.authenticate("google", {
     scope: ["profile"]
@@ -108,6 +124,8 @@ app.get("/auth/google/secrets",
     res.redirect('/secrets');
   });
 
+
+//create Facebook routes according to documentation
 app.get('/auth/facebook',
   passport.authenticate(('facebook'), { scope: 'public_profile'})
 );
@@ -121,6 +139,7 @@ app.get('/auth/facebook/secrets',
     res.redirect('/secrets');
   });
 
+//regular login and register routes.
 app.get("/login", function(req, res) {
   res.render("login");
 });
@@ -129,6 +148,7 @@ app.get("/register", function(req, res) {
   res.render("register");
 });
 
+//allow authenticated users to access secrets page
 app.get("/secrets", function(req, res) {
   User.find({"secret": {$ne:null}}, function(err, foundUsers){
     if(err){
@@ -139,6 +159,7 @@ app.get("/secrets", function(req, res) {
   });
 });
 
+//allow authenticated users to access submit page.
 app.get("/submit", function(req,res) {
   if (req.isAuthenticated()) {
     res.render("submit");
@@ -147,6 +168,7 @@ app.get("/submit", function(req,res) {
   }
 });
 
+//allow authenticated users to submit secrets.
 app.post("/submit", function(req,res){
   const submittedSecret = req.body.secret;
 
@@ -174,6 +196,7 @@ app.get("/logout", function(req, res) {
   });
 });
 
+//check if user exists, if not create new user.
 app.post("/register", function(req, res) {
   User.register({
     username: req.body.username
@@ -189,6 +212,7 @@ app.post("/register", function(req, res) {
   });
 });
 
+//check if user exists and if authenticated, redirect to secrets page.
 app.post("/login", passport.authenticate("local"), function(req, res) {
   const user = new User({
     username: req.body.username,
