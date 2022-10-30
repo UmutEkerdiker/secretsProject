@@ -26,12 +26,7 @@ app.use(bodyParser.urlencoded({
 app.use(session({
   secret: "Our little secret.",
   resave: false,
-  saveUninitialized: false,
-  cookie: {
-    sameSite: "none",
-    secure: true,
-    maxAge: 1000 * 60 * 60 * 24 * 7 // One Week
-  }
+  saveUninitialized: false
 }));
 
 
