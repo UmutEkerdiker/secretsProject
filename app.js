@@ -74,7 +74,6 @@ passport.deserializeUser(function(id, done) {
   });
 });
 
-app.enable("trust proxy");
 
 //use GoogleStrategy to save and authenticate users.
 passport.use(new GoogleStrategy({
