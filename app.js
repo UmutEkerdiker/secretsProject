@@ -13,7 +13,6 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const findOrCreate = require("mongoose-findorcreate");
 const FacebookStrategy = require("passport-facebook").Strategy;
 
-mongoose.connect(process.env.ATLAS_KEY);
 const app = express();
 
 //set view engine, public static files and bodyparser
@@ -36,8 +35,12 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+//mongoose start
+main().catch(err => console.log(err));
 
-
+async function main() {
+  await mongoose.connect('mongodb://localhost:27017/userDB');
+};
 
 //create user schema and include Google and Facebook ID's.
 const userSchema = new mongoose.Schema({
@@ -71,7 +74,7 @@ passport.deserializeUser(function(id, done) {
 passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: "/auth/google/secrets"
+    callbackURL: "https://serene-tundra-35329.herokuapp.com/auth/google/secrets"
   },
   function(accessToken, refreshToken, profile, cb) {
     console.log(profile);
@@ -226,11 +229,6 @@ app.post("/login", passport.authenticate("local"), function(req, res) {
   })
 });
 
-let port = process.env.PORT;
-if (port == null || port == "") {
-  port = 3000;
-};
-
-app.listen(port, function() {
-  console.log("Server has started successfully.");
-});
+app.listen(3000, function(req, res) {
+  console.log("Server started on port 3000.");
+})
