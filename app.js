@@ -22,8 +22,6 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-app.set("trust proxy", 1);
-
 //start the session
 app.use(session({
   secret: "Our little secret.",
