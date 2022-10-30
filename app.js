@@ -14,7 +14,6 @@ const findOrCreate = require("mongoose-findorcreate");
 const FacebookStrategy = require("passport-facebook").Strategy;
 
 mongoose.connect(process.env.ATLAS_KEY);
-
 const app = express();
 
 //set view engine, public static files and bodyparser
@@ -72,7 +71,7 @@ passport.deserializeUser(function(id, done) {
 passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: "/auth/google/secrets"
+    callbackURL: "http://localhost:3000/auth/google/secrets"
   },
   function(accessToken, refreshToken, profile, cb) {
     console.log(profile);
@@ -88,7 +87,7 @@ passport.use(new GoogleStrategy({
 passport.use(new FacebookStrategy({
     clientID: process.env.FACEBOOK_APP_ID,
     clientSecret: process.env.FACEBOOK_APP_SECRET,
-    callbackURL: "/auth/facebook/secrets"
+    callbackURL: "http://localhost:3000/auth/facebook/secrets"
   },
   function(accessToken, refreshToken, profile, cb) {
     console.log(profile);
