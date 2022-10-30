@@ -38,7 +38,7 @@ app.use(passport.session());
 main().catch(err => console.log(err));
 
 async function main() {
-  await mongoose.connect('mongodb://localhost:27017/userDB');
+  await mongoose.connect(process.env.ATLAS_KEY);
 };
 
 //create user schema and include Google and Facebook ID's.
