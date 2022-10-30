@@ -22,6 +22,8 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
+app.set("trust proxy", 1);
+
 //start the session
 app.use(session({
   secret: "Our little secret.",
@@ -78,7 +80,7 @@ passport.deserializeUser(function(id, done) {
 passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: "https://serene-tundra-35329.herokuapp.com/auth/google/secrets"
+    callbackURL: "/auth/google/secrets"
   },
   function(accessToken, refreshToken, profile, cb) {
     console.log(profile);
