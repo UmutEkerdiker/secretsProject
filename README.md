@@ -2,10 +2,11 @@
 
 Live version: https://serene-tundra-35329.herokuapp.com/
 
-<h2>Update<h2>
-I have currently disabled Google authentication on live version until I find a solution to the following problem:
+<h2>Update</h2>
+
+<p>I have currently disabled Google authentication on live version until I find a solution to the following problem:
 When making a callback request with OAuth 2.0 using node the link starts with http://, Google OAuth 2.0 expects https:// therefore 
-you'll get an unmatched URI error. I am trying to find a solution and it will be back up soon. Meanwhile, login using normal credentials.
+you'll get an unmatched URI error. I am trying to find a solution and it will be back up soon. Meanwhile, login using normal credentials.</p>
 
 A web application that allows users to submit secrets anonymously.
 
